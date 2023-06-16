@@ -1,6 +1,6 @@
 
-Your documentation
+Documentation
 ------------------
 
-Make it so.
+Compiler for Decaf language (from CMPT 379)
 
