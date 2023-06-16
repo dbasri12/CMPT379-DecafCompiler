@@ -1,0 +1,4611 @@
+State 25 conflicts: 2 shift/reduce
+State 109 conflicts: 2 shift/reduce
+
+
+Grammar
+
+    0 $accept: start $end
+
+    1 start: program
+
+    2 program: extern_list decafpackage
+    3        | decafpackage
+
+    4 extern_list: externFunc
+    5            | extern_list externFunc
+
+    6 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN externTypes T_RPAREN methodType T_SEMICOLON
+    7           | T_EXTERN T_FUNC T_ID T_LPAREN T_RPAREN methodType T_SEMICOLON
+
+    8 decafpackage: T_PACKAGE T_ID begin_block fieldDecls methodDecls end_block
+    9             | T_PACKAGE T_ID T_LCB T_RCB
+   10             | T_PACKAGE T_ID begin_block fieldDecls end_block
+   11             | T_PACKAGE T_ID begin_block methodDecls end_block
+
+   12 fieldDecls: fieldDecl
+   13           | fieldDecls fieldDecl
+   14           | T_VAR ids type T_SEMICOLON
+   15           | fieldDecls T_VAR ids type T_SEMICOLON
+
+   16 fieldDecl: T_VAR T_ID type T_SEMICOLON
+   17          | T_VAR T_ID arrayType T_SEMICOLON
+   18          | T_VAR T_ID type T_ASSIGN constant T_SEMICOLON
+
+   19 methodDecls: methodDecl
+   20            | methodDecls methodDecl
+
+   21 methodDecl: T_FUNC T_ID T_LPAREN T_RPAREN methodType mblock
+   22           | T_FUNC T_ID T_LPAREN idtypes T_RPAREN methodType mblock
+
+   23 typedSymbols: typedSymbol
+   24             | typedSymbols typedSymbol
+   25             | T_VAR ids type T_SEMICOLON
+   26             | typedSymbols T_VAR ids type T_SEMICOLON
+
+   27 typedSymbol: T_VAR T_ID type T_SEMICOLON
+
+   28 mblock: begin_block end_block
+   29       | begin_block typedSymbols statements end_block
+   30       | begin_block typedSymbols end_block
+   31       | begin_block statements end_block
+
+   32 block: begin_block end_block
+   33      | begin_block typedSymbols statements end_block
+   34      | begin_block typedSymbols end_block
+   35      | begin_block statements end_block
+
+   36 begin_block: T_LCB
+
+   37 end_block: T_RCB
+
+   38 statements: statement
+   39           | statements statement
+
+   40 statement: T_RETURN T_SEMICOLON
+   41          | T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | T_BREAK T_SEMICOLON
+   44          | T_CONTINUE T_SEMICOLON
+   45          | assign T_SEMICOLON
+   46          | methodcall T_SEMICOLON
+   47          | T_WHILE T_LPAREN expr T_RPAREN block
+   48          | T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | T_IF T_LPAREN expr T_RPAREN block
+   50          | T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | block
+
+   52 assigns: assign
+   53        | assigns assign
+
+   54 assign: T_ID T_ASSIGN expr
+   55       | T_ID T_LSB expr T_RSB T_ASSIGN expr
+
+   56 expr: expr T_PLUS expr
+   57     | expr T_MINUS expr
+   58     | expr T_MULT expr
+   59     | expr T_DIV expr
+   60     | expr T_LEFTSHIFT expr
+   61     | expr T_RIGHTSHIFT expr
+   62     | expr T_MOD expr
+   63     | expr T_EQ expr
+   64     | expr T_GEQ expr
+   65     | expr T_LEQ expr
+   66     | expr T_NEQ expr
+   67     | expr T_LT expr
+   68     | expr T_GT expr
+   69     | expr T_AND expr
+   70     | expr T_OR expr
+   71     | T_NOT expr
+   72     | T_MINUS expr
+   73     | constant
+   74     | T_LPAREN expr T_RPAREN
+   75     | T_ID T_LSB expr T_RSB
+   76     | methodcall
+   77     | T_ID
+
+   78 methodcall: T_ID T_LPAREN methodargs T_RPAREN
+   79           | T_ID T_LPAREN T_RPAREN
+
+   80 methodargs: methodarg
+   81           | methodargs T_COMMA methodarg
+
+   82 methodarg: expr
+   83          | T_STRINGCONSTANT
+
+   84 arrayType: T_LSB T_INTCONSTANT T_RSB type
+
+   85 externTypes: externType
+   86            | externTypes T_COMMA externType
+
+   87 externType: T_STRINGTYPE
+   88           | type
+
+   89 ids: T_ID
+   90    | ids T_COMMA T_ID
+
+   91 idtypes: idtype
+   92        | idtypes T_COMMA idtype
+
+   93 idtype: T_ID type
+
+   94 methodType: T_VOID
+   95           | type
+
+   96 type: T_INTTYPE
+   97     | T_BOOLTYPE
+
+   98 constant: T_INTCONSTANT
+   99         | T_CHARCONSTANT
+  100         | boolConstant
+
+  101 boolConstant: T_TRUE
+  102             | T_FALSE
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+T_PACKAGE (258) 8 9 10 11
+T_FUNC (259) 6 7 21 22
+T_RPAREN (260) 6 7 21 22 41 42 47 48 49 50 74 78 79
+T_LPAREN (261) 6 7 21 22 41 42 47 48 49 50 74 78 79
+T_SEMICOLON (262) 6 7 14 15 16 17 18 25 26 27 40 41 42 43 44 45 46
+    50
+T_EXTERN (263) 6 7
+T_WHILE (264) 47
+T_FOR (265) 50
+T_IF (266) 48 49
+T_ELSE (267) 48
+T_LCB (268) 9 36
+T_VAR (269) 14 15 16 17 18 25 26 27
+T_COMMA (270) 81 86 90 92
+T_LSB (271) 55 75 84
+T_RSB (272) 55 75 84
+T_RCB (273) 9 37
+T_ASSIGN (274) 18 54 55
+T_ID (275) 6 7 8 9 10 11 16 17 18 21 22 27 54 55 75 77 78 79 89 90
+    93
+T_BOOLTYPE (276) 97
+T_INTTYPE (277) 96
+T_STRINGTYPE (278) 87
+T_VOID (279) 94
+T_MINUS (280) 57 72
+T_BREAK (281) 43
+T_CONTINUE (282) 44
+T_RETURN (283) 40 41 42
+T_NOT (284) 71
+T_PLUS (285) 56
+T_MULT (286) 58
+T_DIV (287) 59
+T_LEFTSHIFT (288) 60
+T_RIGHTSHIFT (289) 61
+T_LT (290) 67
+T_GT (291) 68
+T_MOD (292) 62
+T_LEQ (293) 65
+T_GEQ (294) 64
+T_EQ (295) 63
+T_NEQ (296) 66
+T_AND (297) 69
+T_OR (298) 70
+T_STRINGCONSTANT (299) 83
+T_FALSE (300) 102
+T_TRUE (301) 101
+T_INTCONSTANT (302) 84 98
+T_CHARCONSTANT (303) 99
+UMINUS (304)
+
+
+Nonterminals, with rules where they appear
+
+$accept (50)
+    on left: 0
+start (51)
+    on left: 1, on right: 0
+program (52)
+    on left: 2 3, on right: 1
+extern_list (53)
+    on left: 4 5, on right: 2 5
+externFunc (54)
+    on left: 6 7, on right: 4 5
+decafpackage (55)
+    on left: 8 9 10 11, on right: 2 3
+fieldDecls (56)
+    on left: 12 13 14 15, on right: 8 10 13 15
+fieldDecl (57)
+    on left: 16 17 18, on right: 12 13
+methodDecls (58)
+    on left: 19 20, on right: 8 11 20
+methodDecl (59)
+    on left: 21 22, on right: 19 20
+typedSymbols (60)
+    on left: 23 24 25 26, on right: 24 26 29 30 33 34
+typedSymbol (61)
+    on left: 27, on right: 23 24
+mblock (62)
+    on left: 28 29 30 31, on right: 21 22
+block (63)
+    on left: 32 33 34 35, on right: 47 48 49 50 51
+begin_block (64)
+    on left: 36, on right: 8 10 11 28 29 30 31 32 33 34 35
+end_block (65)
+    on left: 37, on right: 8 10 11 28 29 30 31 32 33 34 35
+statements (66)
+    on left: 38 39, on right: 29 31 33 35 39
+statement (67)
+    on left: 40 41 42 43 44 45 46 47 48 49 50 51, on right: 38 39
+assigns (68)
+    on left: 52 53, on right: 50 53
+assign (69)
+    on left: 54 55, on right: 45 52 53
+expr (70)
+    on left: 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73
+    74 75 76 77, on right: 42 47 48 49 50 54 55 56 57 58 59 60 61 62
+    63 64 65 66 67 68 69 70 71 72 74 75 82
+methodcall (71)
+    on left: 78 79, on right: 46 76
+methodargs (72)
+    on left: 80 81, on right: 78 81
+methodarg (73)
+    on left: 82 83, on right: 80 81
+arrayType (74)
+    on left: 84, on right: 17
+externTypes (75)
+    on left: 85 86, on right: 6 86
+externType (76)
+    on left: 87 88, on right: 85 86
+ids (77)
+    on left: 89 90, on right: 14 15 25 26 90
+idtypes (78)
+    on left: 91 92, on right: 22 92
+idtype (79)
+    on left: 93, on right: 91 92
+methodType (80)
+    on left: 94 95, on right: 6 7 21 22
+type (81)
+    on left: 96 97, on right: 14 15 16 18 25 26 27 84 88 93 95
+constant (82)
+    on left: 98 99 100, on right: 18 73
+boolConstant (83)
+    on left: 101 102, on right: 100
+
+
+state 0
+
+    0 $accept: . start $end
+    1 start: . program
+    2 program: . extern_list decafpackage
+    3        | . decafpackage
+    4 extern_list: . externFunc
+    5            | . extern_list externFunc
+    6 externFunc: . T_EXTERN T_FUNC T_ID T_LPAREN externTypes T_RPAREN methodType T_SEMICOLON
+    7           | . T_EXTERN T_FUNC T_ID T_LPAREN T_RPAREN methodType T_SEMICOLON
+    8 decafpackage: . T_PACKAGE T_ID begin_block fieldDecls methodDecls end_block
+    9             | . T_PACKAGE T_ID T_LCB T_RCB
+   10             | . T_PACKAGE T_ID begin_block fieldDecls end_block
+   11             | . T_PACKAGE T_ID begin_block methodDecls end_block
+
+    T_PACKAGE  shift, and go to state 1
+    T_EXTERN   shift, and go to state 2
+
+    start         go to state 3
+    program       go to state 4
+    extern_list   go to state 5
+    externFunc    go to state 6
+    decafpackage  go to state 7
+
+
+state 1
+
+    8 decafpackage: T_PACKAGE . T_ID begin_block fieldDecls methodDecls end_block
+    9             | T_PACKAGE . T_ID T_LCB T_RCB
+   10             | T_PACKAGE . T_ID begin_block fieldDecls end_block
+   11             | T_PACKAGE . T_ID begin_block methodDecls end_block
+
+    T_ID  shift, and go to state 8
+
+
+state 2
+
+    6 externFunc: T_EXTERN . T_FUNC T_ID T_LPAREN externTypes T_RPAREN methodType T_SEMICOLON
+    7           | T_EXTERN . T_FUNC T_ID T_LPAREN T_RPAREN methodType T_SEMICOLON
+
+    T_FUNC  shift, and go to state 9
+
+
+state 3
+
+    0 $accept: start . $end
+
+    $end  shift, and go to state 10
+
+
+state 4
+
+    1 start: program .
+
+    $default  reduce using rule 1 (start)
+
+
+state 5
+
+    2 program: extern_list . decafpackage
+    5 extern_list: extern_list . externFunc
+    6 externFunc: . T_EXTERN T_FUNC T_ID T_LPAREN externTypes T_RPAREN methodType T_SEMICOLON
+    7           | . T_EXTERN T_FUNC T_ID T_LPAREN T_RPAREN methodType T_SEMICOLON
+    8 decafpackage: . T_PACKAGE T_ID begin_block fieldDecls methodDecls end_block
+    9             | . T_PACKAGE T_ID T_LCB T_RCB
+   10             | . T_PACKAGE T_ID begin_block fieldDecls end_block
+   11             | . T_PACKAGE T_ID begin_block methodDecls end_block
+
+    T_PACKAGE  shift, and go to state 1
+    T_EXTERN   shift, and go to state 2
+
+    externFunc    go to state 11
+    decafpackage  go to state 12
+
+
+state 6
+
+    4 extern_list: externFunc .
+
+    $default  reduce using rule 4 (extern_list)
+
+
+state 7
+
+    3 program: decafpackage .
+
+    $default  reduce using rule 3 (program)
+
+
+state 8
+
+    8 decafpackage: T_PACKAGE T_ID . begin_block fieldDecls methodDecls end_block
+    9             | T_PACKAGE T_ID . T_LCB T_RCB
+   10             | T_PACKAGE T_ID . begin_block fieldDecls end_block
+   11             | T_PACKAGE T_ID . begin_block methodDecls end_block
+   36 begin_block: . T_LCB
+
+    T_LCB  shift, and go to state 13
+
+    begin_block  go to state 14
+
+
+state 9
+
+    6 externFunc: T_EXTERN T_FUNC . T_ID T_LPAREN externTypes T_RPAREN methodType T_SEMICOLON
+    7           | T_EXTERN T_FUNC . T_ID T_LPAREN T_RPAREN methodType T_SEMICOLON
+
+    T_ID  shift, and go to state 15
+
+
+state 10
+
+    0 $accept: start $end .
+
+    $default  accept
+
+
+state 11
+
+    5 extern_list: extern_list externFunc .
+
+    $default  reduce using rule 5 (extern_list)
+
+
+state 12
+
+    2 program: extern_list decafpackage .
+
+    $default  reduce using rule 2 (program)
+
+
+state 13
+
+    9 decafpackage: T_PACKAGE T_ID T_LCB . T_RCB
+   36 begin_block: T_LCB .  [T_FUNC, T_VAR]
+
+    T_RCB  shift, and go to state 16
+
+    $default  reduce using rule 36 (begin_block)
+
+
+state 14
+
+    8 decafpackage: T_PACKAGE T_ID begin_block . fieldDecls methodDecls end_block
+   10             | T_PACKAGE T_ID begin_block . fieldDecls end_block
+   11             | T_PACKAGE T_ID begin_block . methodDecls end_block
+   12 fieldDecls: . fieldDecl
+   13           | . fieldDecls fieldDecl
+   14           | . T_VAR ids type T_SEMICOLON
+   15           | . fieldDecls T_VAR ids type T_SEMICOLON
+   16 fieldDecl: . T_VAR T_ID type T_SEMICOLON
+   17          | . T_VAR T_ID arrayType T_SEMICOLON
+   18          | . T_VAR T_ID type T_ASSIGN constant T_SEMICOLON
+   19 methodDecls: . methodDecl
+   20            | . methodDecls methodDecl
+   21 methodDecl: . T_FUNC T_ID T_LPAREN T_RPAREN methodType mblock
+   22           | . T_FUNC T_ID T_LPAREN idtypes T_RPAREN methodType mblock
+
+    T_FUNC  shift, and go to state 17
+    T_VAR   shift, and go to state 18
+
+    fieldDecls   go to state 19
+    fieldDecl    go to state 20
+    methodDecls  go to state 21
+    methodDecl   go to state 22
+
+
+state 15
+
+    6 externFunc: T_EXTERN T_FUNC T_ID . T_LPAREN externTypes T_RPAREN methodType T_SEMICOLON
+    7           | T_EXTERN T_FUNC T_ID . T_LPAREN T_RPAREN methodType T_SEMICOLON
+
+    T_LPAREN  shift, and go to state 23
+
+
+state 16
+
+    9 decafpackage: T_PACKAGE T_ID T_LCB T_RCB .
+
+    $default  reduce using rule 9 (decafpackage)
+
+
+state 17
+
+   21 methodDecl: T_FUNC . T_ID T_LPAREN T_RPAREN methodType mblock
+   22           | T_FUNC . T_ID T_LPAREN idtypes T_RPAREN methodType mblock
+
+    T_ID  shift, and go to state 24
+
+
+state 18
+
+   14 fieldDecls: T_VAR . ids type T_SEMICOLON
+   16 fieldDecl: T_VAR . T_ID type T_SEMICOLON
+   17          | T_VAR . T_ID arrayType T_SEMICOLON
+   18          | T_VAR . T_ID type T_ASSIGN constant T_SEMICOLON
+   89 ids: . T_ID
+   90    | . ids T_COMMA T_ID
+
+    T_ID  shift, and go to state 25
+
+    ids  go to state 26
+
+
+state 19
+
+    8 decafpackage: T_PACKAGE T_ID begin_block fieldDecls . methodDecls end_block
+   10             | T_PACKAGE T_ID begin_block fieldDecls . end_block
+   13 fieldDecls: fieldDecls . fieldDecl
+   15           | fieldDecls . T_VAR ids type T_SEMICOLON
+   16 fieldDecl: . T_VAR T_ID type T_SEMICOLON
+   17          | . T_VAR T_ID arrayType T_SEMICOLON
+   18          | . T_VAR T_ID type T_ASSIGN constant T_SEMICOLON
+   19 methodDecls: . methodDecl
+   20            | . methodDecls methodDecl
+   21 methodDecl: . T_FUNC T_ID T_LPAREN T_RPAREN methodType mblock
+   22           | . T_FUNC T_ID T_LPAREN idtypes T_RPAREN methodType mblock
+   37 end_block: . T_RCB
+
+    T_FUNC  shift, and go to state 17
+    T_VAR   shift, and go to state 27
+    T_RCB   shift, and go to state 28
+
+    fieldDecl    go to state 29
+    methodDecls  go to state 30
+    methodDecl   go to state 22
+    end_block    go to state 31
+
+
+state 20
+
+   12 fieldDecls: fieldDecl .
+
+    $default  reduce using rule 12 (fieldDecls)
+
+
+state 21
+
+   11 decafpackage: T_PACKAGE T_ID begin_block methodDecls . end_block
+   20 methodDecls: methodDecls . methodDecl
+   21 methodDecl: . T_FUNC T_ID T_LPAREN T_RPAREN methodType mblock
+   22           | . T_FUNC T_ID T_LPAREN idtypes T_RPAREN methodType mblock
+   37 end_block: . T_RCB
+
+    T_FUNC  shift, and go to state 17
+    T_RCB   shift, and go to state 28
+
+    methodDecl  go to state 32
+    end_block   go to state 33
+
+
+state 22
+
+   19 methodDecls: methodDecl .
+
+    $default  reduce using rule 19 (methodDecls)
+
+
+state 23
+
+    6 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN . externTypes T_RPAREN methodType T_SEMICOLON
+    7           | T_EXTERN T_FUNC T_ID T_LPAREN . T_RPAREN methodType T_SEMICOLON
+   85 externTypes: . externType
+   86            | . externTypes T_COMMA externType
+   87 externType: . T_STRINGTYPE
+   88           | . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_RPAREN      shift, and go to state 34
+    T_BOOLTYPE    shift, and go to state 35
+    T_INTTYPE     shift, and go to state 36
+    T_STRINGTYPE  shift, and go to state 37
+
+    externTypes  go to state 38
+    externType   go to state 39
+    type         go to state 40
+
+
+state 24
+
+   21 methodDecl: T_FUNC T_ID . T_LPAREN T_RPAREN methodType mblock
+   22           | T_FUNC T_ID . T_LPAREN idtypes T_RPAREN methodType mblock
+
+    T_LPAREN  shift, and go to state 41
+
+
+state 25
+
+   16 fieldDecl: T_VAR T_ID . type T_SEMICOLON
+   17          | T_VAR T_ID . arrayType T_SEMICOLON
+   18          | T_VAR T_ID . type T_ASSIGN constant T_SEMICOLON
+   84 arrayType: . T_LSB T_INTCONSTANT T_RSB type
+   89 ids: T_ID .  [T_COMMA, T_BOOLTYPE, T_INTTYPE]
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_LSB       shift, and go to state 42
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    T_BOOLTYPE  [reduce using rule 89 (ids)]
+    T_INTTYPE   [reduce using rule 89 (ids)]
+    $default    reduce using rule 89 (ids)
+
+    arrayType  go to state 43
+    type       go to state 44
+
+
+state 26
+
+   14 fieldDecls: T_VAR ids . type T_SEMICOLON
+   90 ids: ids . T_COMMA T_ID
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_COMMA     shift, and go to state 45
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    type  go to state 46
+
+
+state 27
+
+   15 fieldDecls: fieldDecls T_VAR . ids type T_SEMICOLON
+   16 fieldDecl: T_VAR . T_ID type T_SEMICOLON
+   17          | T_VAR . T_ID arrayType T_SEMICOLON
+   18          | T_VAR . T_ID type T_ASSIGN constant T_SEMICOLON
+   89 ids: . T_ID
+   90    | . ids T_COMMA T_ID
+
+    T_ID  shift, and go to state 25
+
+    ids  go to state 47
+
+
+state 28
+
+   37 end_block: T_RCB .
+
+    $default  reduce using rule 37 (end_block)
+
+
+state 29
+
+   13 fieldDecls: fieldDecls fieldDecl .
+
+    $default  reduce using rule 13 (fieldDecls)
+
+
+state 30
+
+    8 decafpackage: T_PACKAGE T_ID begin_block fieldDecls methodDecls . end_block
+   20 methodDecls: methodDecls . methodDecl
+   21 methodDecl: . T_FUNC T_ID T_LPAREN T_RPAREN methodType mblock
+   22           | . T_FUNC T_ID T_LPAREN idtypes T_RPAREN methodType mblock
+   37 end_block: . T_RCB
+
+    T_FUNC  shift, and go to state 17
+    T_RCB   shift, and go to state 28
+
+    methodDecl  go to state 32
+    end_block   go to state 48
+
+
+state 31
+
+   10 decafpackage: T_PACKAGE T_ID begin_block fieldDecls end_block .
+
+    $default  reduce using rule 10 (decafpackage)
+
+
+state 32
+
+   20 methodDecls: methodDecls methodDecl .
+
+    $default  reduce using rule 20 (methodDecls)
+
+
+state 33
+
+   11 decafpackage: T_PACKAGE T_ID begin_block methodDecls end_block .
+
+    $default  reduce using rule 11 (decafpackage)
+
+
+state 34
+
+    7 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN T_RPAREN . methodType T_SEMICOLON
+   94 methodType: . T_VOID
+   95           | . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+    T_VOID      shift, and go to state 49
+
+    methodType  go to state 50
+    type        go to state 51
+
+
+state 35
+
+   97 type: T_BOOLTYPE .
+
+    $default  reduce using rule 97 (type)
+
+
+state 36
+
+   96 type: T_INTTYPE .
+
+    $default  reduce using rule 96 (type)
+
+
+state 37
+
+   87 externType: T_STRINGTYPE .
+
+    $default  reduce using rule 87 (externType)
+
+
+state 38
+
+    6 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN externTypes . T_RPAREN methodType T_SEMICOLON
+   86 externTypes: externTypes . T_COMMA externType
+
+    T_RPAREN  shift, and go to state 52
+    T_COMMA   shift, and go to state 53
+
+
+state 39
+
+   85 externTypes: externType .
+
+    $default  reduce using rule 85 (externTypes)
+
+
+state 40
+
+   88 externType: type .
+
+    $default  reduce using rule 88 (externType)
+
+
+state 41
+
+   21 methodDecl: T_FUNC T_ID T_LPAREN . T_RPAREN methodType mblock
+   22           | T_FUNC T_ID T_LPAREN . idtypes T_RPAREN methodType mblock
+   91 idtypes: . idtype
+   92        | . idtypes T_COMMA idtype
+   93 idtype: . T_ID type
+
+    T_RPAREN  shift, and go to state 54
+    T_ID      shift, and go to state 55
+
+    idtypes  go to state 56
+    idtype   go to state 57
+
+
+state 42
+
+   84 arrayType: T_LSB . T_INTCONSTANT T_RSB type
+
+    T_INTCONSTANT  shift, and go to state 58
+
+
+state 43
+
+   17 fieldDecl: T_VAR T_ID arrayType . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 59
+
+
+state 44
+
+   16 fieldDecl: T_VAR T_ID type . T_SEMICOLON
+   18          | T_VAR T_ID type . T_ASSIGN constant T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 60
+    T_ASSIGN     shift, and go to state 61
+
+
+state 45
+
+   90 ids: ids T_COMMA . T_ID
+
+    T_ID  shift, and go to state 62
+
+
+state 46
+
+   14 fieldDecls: T_VAR ids type . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 63
+
+
+state 47
+
+   15 fieldDecls: fieldDecls T_VAR ids . type T_SEMICOLON
+   90 ids: ids . T_COMMA T_ID
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_COMMA     shift, and go to state 45
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    type  go to state 64
+
+
+state 48
+
+    8 decafpackage: T_PACKAGE T_ID begin_block fieldDecls methodDecls end_block .
+
+    $default  reduce using rule 8 (decafpackage)
+
+
+state 49
+
+   94 methodType: T_VOID .
+
+    $default  reduce using rule 94 (methodType)
+
+
+state 50
+
+    7 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN T_RPAREN methodType . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 65
+
+
+state 51
+
+   95 methodType: type .
+
+    $default  reduce using rule 95 (methodType)
+
+
+state 52
+
+    6 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN externTypes T_RPAREN . methodType T_SEMICOLON
+   94 methodType: . T_VOID
+   95           | . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+    T_VOID      shift, and go to state 49
+
+    methodType  go to state 66
+    type        go to state 51
+
+
+state 53
+
+   86 externTypes: externTypes T_COMMA . externType
+   87 externType: . T_STRINGTYPE
+   88           | . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE    shift, and go to state 35
+    T_INTTYPE     shift, and go to state 36
+    T_STRINGTYPE  shift, and go to state 37
+
+    externType  go to state 67
+    type        go to state 40
+
+
+state 54
+
+   21 methodDecl: T_FUNC T_ID T_LPAREN T_RPAREN . methodType mblock
+   94 methodType: . T_VOID
+   95           | . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+    T_VOID      shift, and go to state 49
+
+    methodType  go to state 68
+    type        go to state 51
+
+
+state 55
+
+   93 idtype: T_ID . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    type  go to state 69
+
+
+state 56
+
+   22 methodDecl: T_FUNC T_ID T_LPAREN idtypes . T_RPAREN methodType mblock
+   92 idtypes: idtypes . T_COMMA idtype
+
+    T_RPAREN  shift, and go to state 70
+    T_COMMA   shift, and go to state 71
+
+
+state 57
+
+   91 idtypes: idtype .
+
+    $default  reduce using rule 91 (idtypes)
+
+
+state 58
+
+   84 arrayType: T_LSB T_INTCONSTANT . T_RSB type
+
+    T_RSB  shift, and go to state 72
+
+
+state 59
+
+   17 fieldDecl: T_VAR T_ID arrayType T_SEMICOLON .
+
+    $default  reduce using rule 17 (fieldDecl)
+
+
+state 60
+
+   16 fieldDecl: T_VAR T_ID type T_SEMICOLON .
+
+    $default  reduce using rule 16 (fieldDecl)
+
+
+state 61
+
+   18 fieldDecl: T_VAR T_ID type T_ASSIGN . constant T_SEMICOLON
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    constant      go to state 77
+    boolConstant  go to state 78
+
+
+state 62
+
+   90 ids: ids T_COMMA T_ID .
+
+    $default  reduce using rule 90 (ids)
+
+
+state 63
+
+   14 fieldDecls: T_VAR ids type T_SEMICOLON .
+
+    $default  reduce using rule 14 (fieldDecls)
+
+
+state 64
+
+   15 fieldDecls: fieldDecls T_VAR ids type . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 79
+
+
+state 65
+
+    7 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN T_RPAREN methodType T_SEMICOLON .
+
+    $default  reduce using rule 7 (externFunc)
+
+
+state 66
+
+    6 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN externTypes T_RPAREN methodType . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 80
+
+
+state 67
+
+   86 externTypes: externTypes T_COMMA externType .
+
+    $default  reduce using rule 86 (externTypes)
+
+
+state 68
+
+   21 methodDecl: T_FUNC T_ID T_LPAREN T_RPAREN methodType . mblock
+   28 mblock: . begin_block end_block
+   29       | . begin_block typedSymbols statements end_block
+   30       | . begin_block typedSymbols end_block
+   31       | . begin_block statements end_block
+   36 begin_block: . T_LCB
+
+    T_LCB  shift, and go to state 81
+
+    mblock       go to state 82
+    begin_block  go to state 83
+
+
+state 69
+
+   93 idtype: T_ID type .
+
+    $default  reduce using rule 93 (idtype)
+
+
+state 70
+
+   22 methodDecl: T_FUNC T_ID T_LPAREN idtypes T_RPAREN . methodType mblock
+   94 methodType: . T_VOID
+   95           | . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+    T_VOID      shift, and go to state 49
+
+    methodType  go to state 84
+    type        go to state 51
+
+
+state 71
+
+   92 idtypes: idtypes T_COMMA . idtype
+   93 idtype: . T_ID type
+
+    T_ID  shift, and go to state 55
+
+    idtype  go to state 85
+
+
+state 72
+
+   84 arrayType: T_LSB T_INTCONSTANT T_RSB . type
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    type  go to state 86
+
+
+state 73
+
+  102 boolConstant: T_FALSE .
+
+    $default  reduce using rule 102 (boolConstant)
+
+
+state 74
+
+  101 boolConstant: T_TRUE .
+
+    $default  reduce using rule 101 (boolConstant)
+
+
+state 75
+
+   98 constant: T_INTCONSTANT .
+
+    $default  reduce using rule 98 (constant)
+
+
+state 76
+
+   99 constant: T_CHARCONSTANT .
+
+    $default  reduce using rule 99 (constant)
+
+
+state 77
+
+   18 fieldDecl: T_VAR T_ID type T_ASSIGN constant . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 87
+
+
+state 78
+
+  100 constant: boolConstant .
+
+    $default  reduce using rule 100 (constant)
+
+
+state 79
+
+   15 fieldDecls: fieldDecls T_VAR ids type T_SEMICOLON .
+
+    $default  reduce using rule 15 (fieldDecls)
+
+
+state 80
+
+    6 externFunc: T_EXTERN T_FUNC T_ID T_LPAREN externTypes T_RPAREN methodType T_SEMICOLON .
+
+    $default  reduce using rule 6 (externFunc)
+
+
+state 81
+
+   36 begin_block: T_LCB .
+
+    $default  reduce using rule 36 (begin_block)
+
+
+state 82
+
+   21 methodDecl: T_FUNC T_ID T_LPAREN T_RPAREN methodType mblock .
+
+    $default  reduce using rule 21 (methodDecl)
+
+
+state 83
+
+   23 typedSymbols: . typedSymbol
+   24             | . typedSymbols typedSymbol
+   25             | . T_VAR ids type T_SEMICOLON
+   26             | . typedSymbols T_VAR ids type T_SEMICOLON
+   27 typedSymbol: . T_VAR T_ID type T_SEMICOLON
+   28 mblock: begin_block . end_block
+   29       | begin_block . typedSymbols statements end_block
+   30       | begin_block . typedSymbols end_block
+   31       | begin_block . statements end_block
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   38 statements: . statement
+   39           | . statements statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_VAR       shift, and go to state 91
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    typedSymbols  go to state 96
+    typedSymbol   go to state 97
+    block         go to state 98
+    begin_block   go to state 99
+    end_block     go to state 100
+    statements    go to state 101
+    statement     go to state 102
+    assign        go to state 103
+    methodcall    go to state 104
+
+
+state 84
+
+   22 methodDecl: T_FUNC T_ID T_LPAREN idtypes T_RPAREN methodType . mblock
+   28 mblock: . begin_block end_block
+   29       | . begin_block typedSymbols statements end_block
+   30       | . begin_block typedSymbols end_block
+   31       | . begin_block statements end_block
+   36 begin_block: . T_LCB
+
+    T_LCB  shift, and go to state 81
+
+    mblock       go to state 105
+    begin_block  go to state 83
+
+
+state 85
+
+   92 idtypes: idtypes T_COMMA idtype .
+
+    $default  reduce using rule 92 (idtypes)
+
+
+state 86
+
+   84 arrayType: T_LSB T_INTCONSTANT T_RSB type .
+
+    $default  reduce using rule 84 (arrayType)
+
+
+state 87
+
+   18 fieldDecl: T_VAR T_ID type T_ASSIGN constant T_SEMICOLON .
+
+    $default  reduce using rule 18 (fieldDecl)
+
+
+state 88
+
+   47 statement: T_WHILE . T_LPAREN expr T_RPAREN block
+
+    T_LPAREN  shift, and go to state 106
+
+
+state 89
+
+   50 statement: T_FOR . T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+
+    T_LPAREN  shift, and go to state 107
+
+
+state 90
+
+   48 statement: T_IF . T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | T_IF . T_LPAREN expr T_RPAREN block
+
+    T_LPAREN  shift, and go to state 108
+
+
+state 91
+
+   25 typedSymbols: T_VAR . ids type T_SEMICOLON
+   27 typedSymbol: T_VAR . T_ID type T_SEMICOLON
+   89 ids: . T_ID
+   90    | . ids T_COMMA T_ID
+
+    T_ID  shift, and go to state 109
+
+    ids  go to state 110
+
+
+state 92
+
+   54 assign: T_ID . T_ASSIGN expr
+   55       | T_ID . T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: T_ID . T_LPAREN methodargs T_RPAREN
+   79           | T_ID . T_LPAREN T_RPAREN
+
+    T_LPAREN  shift, and go to state 111
+    T_LSB     shift, and go to state 112
+    T_ASSIGN  shift, and go to state 113
+
+
+state 93
+
+   43 statement: T_BREAK . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 114
+
+
+state 94
+
+   44 statement: T_CONTINUE . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 115
+
+
+state 95
+
+   40 statement: T_RETURN . T_SEMICOLON
+   41          | T_RETURN . T_LPAREN T_RPAREN T_SEMICOLON
+   42          | T_RETURN . T_LPAREN expr T_RPAREN T_SEMICOLON
+
+    T_LPAREN     shift, and go to state 116
+    T_SEMICOLON  shift, and go to state 117
+
+
+state 96
+
+   24 typedSymbols: typedSymbols . typedSymbol
+   26             | typedSymbols . T_VAR ids type T_SEMICOLON
+   27 typedSymbol: . T_VAR T_ID type T_SEMICOLON
+   29 mblock: begin_block typedSymbols . statements end_block
+   30       | begin_block typedSymbols . end_block
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   38 statements: . statement
+   39           | . statements statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_VAR       shift, and go to state 118
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    typedSymbol  go to state 119
+    block        go to state 98
+    begin_block  go to state 99
+    end_block    go to state 120
+    statements   go to state 121
+    statement    go to state 102
+    assign       go to state 103
+    methodcall   go to state 104
+
+
+state 97
+
+   23 typedSymbols: typedSymbol .
+
+    $default  reduce using rule 23 (typedSymbols)
+
+
+state 98
+
+   51 statement: block .
+
+    $default  reduce using rule 51 (statement)
+
+
+state 99
+
+   23 typedSymbols: . typedSymbol
+   24             | . typedSymbols typedSymbol
+   25             | . T_VAR ids type T_SEMICOLON
+   26             | . typedSymbols T_VAR ids type T_SEMICOLON
+   27 typedSymbol: . T_VAR T_ID type T_SEMICOLON
+   32 block: . begin_block end_block
+   32      | begin_block . end_block
+   33      | . begin_block typedSymbols statements end_block
+   33      | begin_block . typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   34      | begin_block . typedSymbols end_block
+   35      | . begin_block statements end_block
+   35      | begin_block . statements end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   38 statements: . statement
+   39           | . statements statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_VAR       shift, and go to state 91
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    typedSymbols  go to state 122
+    typedSymbol   go to state 97
+    block         go to state 98
+    begin_block   go to state 99
+    end_block     go to state 123
+    statements    go to state 124
+    statement     go to state 102
+    assign        go to state 103
+    methodcall    go to state 104
+
+
+state 100
+
+   28 mblock: begin_block end_block .
+
+    $default  reduce using rule 28 (mblock)
+
+
+state 101
+
+   31 mblock: begin_block statements . end_block
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   39 statements: statements . statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    block        go to state 98
+    begin_block  go to state 99
+    end_block    go to state 125
+    statement    go to state 126
+    assign       go to state 103
+    methodcall   go to state 104
+
+
+state 102
+
+   38 statements: statement .
+
+    $default  reduce using rule 38 (statements)
+
+
+state 103
+
+   45 statement: assign . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 127
+
+
+state 104
+
+   46 statement: methodcall . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 128
+
+
+state 105
+
+   22 methodDecl: T_FUNC T_ID T_LPAREN idtypes T_RPAREN methodType mblock .
+
+    $default  reduce using rule 22 (methodDecl)
+
+
+state 106
+
+   47 statement: T_WHILE T_LPAREN . expr T_RPAREN block
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 133
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 107
+
+   50 statement: T_FOR T_LPAREN . assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   52 assigns: . assign
+   53        | . assigns assign
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+
+    T_ID  shift, and go to state 136
+
+    assigns  go to state 137
+    assign   go to state 138
+
+
+state 108
+
+   48 statement: T_IF T_LPAREN . expr T_RPAREN block T_ELSE block
+   49          | T_IF T_LPAREN . expr T_RPAREN block
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 139
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 109
+
+   27 typedSymbol: T_VAR T_ID . type T_SEMICOLON
+   89 ids: T_ID .  [T_COMMA, T_BOOLTYPE, T_INTTYPE]
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    T_BOOLTYPE  [reduce using rule 89 (ids)]
+    T_INTTYPE   [reduce using rule 89 (ids)]
+    $default    reduce using rule 89 (ids)
+
+    type  go to state 140
+
+
+state 110
+
+   25 typedSymbols: T_VAR ids . type T_SEMICOLON
+   90 ids: ids . T_COMMA T_ID
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_COMMA     shift, and go to state 45
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    type  go to state 141
+
+
+state 111
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   78           | T_ID T_LPAREN . methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   79           | T_ID T_LPAREN . T_RPAREN
+   80 methodargs: . methodarg
+   81           | . methodargs T_COMMA methodarg
+   82 methodarg: . expr
+   83          | . T_STRINGCONSTANT
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_RPAREN          shift, and go to state 142
+    T_LPAREN          shift, and go to state 129
+    T_ID              shift, and go to state 130
+    T_MINUS           shift, and go to state 131
+    T_NOT             shift, and go to state 132
+    T_STRINGCONSTANT  shift, and go to state 143
+    T_FALSE           shift, and go to state 73
+    T_TRUE            shift, and go to state 74
+    T_INTCONSTANT     shift, and go to state 75
+    T_CHARCONSTANT    shift, and go to state 76
+
+    expr          go to state 144
+    methodcall    go to state 134
+    methodargs    go to state 145
+    methodarg     go to state 146
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 112
+
+   55 assign: T_ID T_LSB . expr T_RSB T_ASSIGN expr
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 147
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 113
+
+   54 assign: T_ID T_ASSIGN . expr
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 148
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 114
+
+   43 statement: T_BREAK T_SEMICOLON .
+
+    $default  reduce using rule 43 (statement)
+
+
+state 115
+
+   44 statement: T_CONTINUE T_SEMICOLON .
+
+    $default  reduce using rule 44 (statement)
+
+
+state 116
+
+   41 statement: T_RETURN T_LPAREN . T_RPAREN T_SEMICOLON
+   42          | T_RETURN T_LPAREN . expr T_RPAREN T_SEMICOLON
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_RPAREN        shift, and go to state 149
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 150
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 117
+
+   40 statement: T_RETURN T_SEMICOLON .
+
+    $default  reduce using rule 40 (statement)
+
+
+state 118
+
+   26 typedSymbols: typedSymbols T_VAR . ids type T_SEMICOLON
+   27 typedSymbol: T_VAR . T_ID type T_SEMICOLON
+   89 ids: . T_ID
+   90    | . ids T_COMMA T_ID
+
+    T_ID  shift, and go to state 109
+
+    ids  go to state 151
+
+
+state 119
+
+   24 typedSymbols: typedSymbols typedSymbol .
+
+    $default  reduce using rule 24 (typedSymbols)
+
+
+state 120
+
+   30 mblock: begin_block typedSymbols end_block .
+
+    $default  reduce using rule 30 (mblock)
+
+
+state 121
+
+   29 mblock: begin_block typedSymbols statements . end_block
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   39 statements: statements . statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    block        go to state 98
+    begin_block  go to state 99
+    end_block    go to state 152
+    statement    go to state 126
+    assign       go to state 103
+    methodcall   go to state 104
+
+
+state 122
+
+   24 typedSymbols: typedSymbols . typedSymbol
+   26             | typedSymbols . T_VAR ids type T_SEMICOLON
+   27 typedSymbol: . T_VAR T_ID type T_SEMICOLON
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   33      | begin_block typedSymbols . statements end_block
+   34      | . begin_block typedSymbols end_block
+   34      | begin_block typedSymbols . end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   38 statements: . statement
+   39           | . statements statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_VAR       shift, and go to state 118
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    typedSymbol  go to state 119
+    block        go to state 98
+    begin_block  go to state 99
+    end_block    go to state 153
+    statements   go to state 154
+    statement    go to state 102
+    assign       go to state 103
+    methodcall   go to state 104
+
+
+state 123
+
+   32 block: begin_block end_block .
+
+    $default  reduce using rule 32 (block)
+
+
+state 124
+
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   35      | begin_block statements . end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   39 statements: statements . statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    block        go to state 98
+    begin_block  go to state 99
+    end_block    go to state 155
+    statement    go to state 126
+    assign       go to state 103
+    methodcall   go to state 104
+
+
+state 125
+
+   31 mblock: begin_block statements end_block .
+
+    $default  reduce using rule 31 (mblock)
+
+
+state 126
+
+   39 statements: statements statement .
+
+    $default  reduce using rule 39 (statements)
+
+
+state 127
+
+   45 statement: assign T_SEMICOLON .
+
+    $default  reduce using rule 45 (statement)
+
+
+state 128
+
+   46 statement: methodcall T_SEMICOLON .
+
+    $default  reduce using rule 46 (statement)
+
+
+state 129
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   74     | T_LPAREN . expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 156
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 130
+
+   75 expr: T_ID . T_LSB expr T_RSB
+   77     | T_ID .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   78 methodcall: T_ID . T_LPAREN methodargs T_RPAREN
+   79           | T_ID . T_LPAREN T_RPAREN
+
+    T_LPAREN  shift, and go to state 111
+    T_LSB     shift, and go to state 157
+
+    $default  reduce using rule 77 (expr)
+
+
+state 131
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   72     | T_MINUS . expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 158
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 132
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   71     | T_NOT . expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 159
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 133
+
+   47 statement: T_WHILE T_LPAREN expr . T_RPAREN block
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_RPAREN      shift, and go to state 160
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+
+state 134
+
+   76 expr: methodcall .
+
+    $default  reduce using rule 76 (expr)
+
+
+state 135
+
+   73 expr: constant .
+
+    $default  reduce using rule 73 (expr)
+
+
+state 136
+
+   54 assign: T_ID . T_ASSIGN expr
+   55       | T_ID . T_LSB expr T_RSB T_ASSIGN expr
+
+    T_LSB     shift, and go to state 112
+    T_ASSIGN  shift, and go to state 113
+
+
+state 137
+
+   50 statement: T_FOR T_LPAREN assigns . T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   53 assigns: assigns . assign
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+
+    T_SEMICOLON  shift, and go to state 176
+    T_ID         shift, and go to state 136
+
+    assign  go to state 177
+
+
+state 138
+
+   52 assigns: assign .
+
+    $default  reduce using rule 52 (assigns)
+
+
+state 139
+
+   48 statement: T_IF T_LPAREN expr . T_RPAREN block T_ELSE block
+   49          | T_IF T_LPAREN expr . T_RPAREN block
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_RPAREN      shift, and go to state 178
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+
+state 140
+
+   27 typedSymbol: T_VAR T_ID type . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 179
+
+
+state 141
+
+   25 typedSymbols: T_VAR ids type . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 180
+
+
+state 142
+
+   79 methodcall: T_ID T_LPAREN T_RPAREN .
+
+    $default  reduce using rule 79 (methodcall)
+
+
+state 143
+
+   83 methodarg: T_STRINGCONSTANT .
+
+    $default  reduce using rule 83 (methodarg)
+
+
+state 144
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+   82 methodarg: expr .  [T_RPAREN, T_COMMA]
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+    $default  reduce using rule 82 (methodarg)
+
+
+state 145
+
+   78 methodcall: T_ID T_LPAREN methodargs . T_RPAREN
+   81 methodargs: methodargs . T_COMMA methodarg
+
+    T_RPAREN  shift, and go to state 181
+    T_COMMA   shift, and go to state 182
+
+
+state 146
+
+   80 methodargs: methodarg .
+
+    $default  reduce using rule 80 (methodargs)
+
+
+state 147
+
+   55 assign: T_ID T_LSB expr . T_RSB T_ASSIGN expr
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_RSB         shift, and go to state 183
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+
+state 148
+
+   54 assign: T_ID T_ASSIGN expr .  [T_RPAREN, T_SEMICOLON, T_ID]
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+    $default  reduce using rule 54 (assign)
+
+
+state 149
+
+   41 statement: T_RETURN T_LPAREN T_RPAREN . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 184
+
+
+state 150
+
+   42 statement: T_RETURN T_LPAREN expr . T_RPAREN T_SEMICOLON
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_RPAREN      shift, and go to state 185
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+
+state 151
+
+   26 typedSymbols: typedSymbols T_VAR ids . type T_SEMICOLON
+   90 ids: ids . T_COMMA T_ID
+   96 type: . T_INTTYPE
+   97     | . T_BOOLTYPE
+
+    T_COMMA     shift, and go to state 45
+    T_BOOLTYPE  shift, and go to state 35
+    T_INTTYPE   shift, and go to state 36
+
+    type  go to state 186
+
+
+state 152
+
+   29 mblock: begin_block typedSymbols statements end_block .
+
+    $default  reduce using rule 29 (mblock)
+
+
+state 153
+
+   34 block: begin_block typedSymbols end_block .
+
+    $default  reduce using rule 34 (block)
+
+
+state 154
+
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   33      | begin_block typedSymbols statements . end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   37 end_block: . T_RCB
+   39 statements: statements . statement
+   40 statement: . T_RETURN T_SEMICOLON
+   41          | . T_RETURN T_LPAREN T_RPAREN T_SEMICOLON
+   42          | . T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON
+   43          | . T_BREAK T_SEMICOLON
+   44          | . T_CONTINUE T_SEMICOLON
+   45          | . assign T_SEMICOLON
+   46          | . methodcall T_SEMICOLON
+   47          | . T_WHILE T_LPAREN expr T_RPAREN block
+   48          | . T_IF T_LPAREN expr T_RPAREN block T_ELSE block
+   49          | . T_IF T_LPAREN expr T_RPAREN block
+   50          | . T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block
+   51          | . block
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+
+    T_WHILE     shift, and go to state 88
+    T_FOR       shift, and go to state 89
+    T_IF        shift, and go to state 90
+    T_LCB       shift, and go to state 81
+    T_RCB       shift, and go to state 28
+    T_ID        shift, and go to state 92
+    T_BREAK     shift, and go to state 93
+    T_CONTINUE  shift, and go to state 94
+    T_RETURN    shift, and go to state 95
+
+    block        go to state 98
+    begin_block  go to state 99
+    end_block    go to state 187
+    statement    go to state 126
+    assign       go to state 103
+    methodcall   go to state 104
+
+
+state 155
+
+   35 block: begin_block statements end_block .
+
+    $default  reduce using rule 35 (block)
+
+
+state 156
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+   74     | T_LPAREN expr . T_RPAREN
+
+    T_RPAREN      shift, and go to state 188
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+
+state 157
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   75     | T_ID T_LSB . expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 189
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 158
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+   72     | T_MINUS expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+
+    $default  reduce using rule 72 (expr)
+
+    Conflict between rule 72 and token T_MINUS resolved as reduce (T_MINUS < UMINUS).
+    Conflict between rule 72 and token T_PLUS resolved as reduce (T_PLUS < UMINUS).
+    Conflict between rule 72 and token T_MULT resolved as reduce (T_MULT < UMINUS).
+    Conflict between rule 72 and token T_DIV resolved as reduce (T_DIV < UMINUS).
+    Conflict between rule 72 and token T_LEFTSHIFT resolved as reduce (T_LEFTSHIFT < UMINUS).
+    Conflict between rule 72 and token T_RIGHTSHIFT resolved as reduce (T_RIGHTSHIFT < UMINUS).
+    Conflict between rule 72 and token T_LT resolved as reduce (T_LT < UMINUS).
+    Conflict between rule 72 and token T_GT resolved as reduce (T_GT < UMINUS).
+    Conflict between rule 72 and token T_MOD resolved as reduce (T_MOD < UMINUS).
+    Conflict between rule 72 and token T_LEQ resolved as reduce (T_LEQ < UMINUS).
+    Conflict between rule 72 and token T_GEQ resolved as reduce (T_GEQ < UMINUS).
+    Conflict between rule 72 and token T_EQ resolved as reduce (T_EQ < UMINUS).
+    Conflict between rule 72 and token T_NEQ resolved as reduce (T_NEQ < UMINUS).
+    Conflict between rule 72 and token T_AND resolved as reduce (T_AND < UMINUS).
+    Conflict between rule 72 and token T_OR resolved as reduce (T_OR < UMINUS).
+
+
+state 159
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+   71     | T_NOT expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+
+    $default  reduce using rule 71 (expr)
+
+    Conflict between rule 71 and token T_MINUS resolved as reduce (T_MINUS < T_NOT).
+    Conflict between rule 71 and token T_PLUS resolved as reduce (T_PLUS < T_NOT).
+    Conflict between rule 71 and token T_MULT resolved as reduce (T_MULT < T_NOT).
+    Conflict between rule 71 and token T_DIV resolved as reduce (T_DIV < T_NOT).
+    Conflict between rule 71 and token T_LEFTSHIFT resolved as reduce (T_LEFTSHIFT < T_NOT).
+    Conflict between rule 71 and token T_RIGHTSHIFT resolved as reduce (T_RIGHTSHIFT < T_NOT).
+    Conflict between rule 71 and token T_LT resolved as reduce (T_LT < T_NOT).
+    Conflict between rule 71 and token T_GT resolved as reduce (T_GT < T_NOT).
+    Conflict between rule 71 and token T_MOD resolved as reduce (T_MOD < T_NOT).
+    Conflict between rule 71 and token T_LEQ resolved as reduce (T_LEQ < T_NOT).
+    Conflict between rule 71 and token T_GEQ resolved as reduce (T_GEQ < T_NOT).
+    Conflict between rule 71 and token T_EQ resolved as reduce (T_EQ < T_NOT).
+    Conflict between rule 71 and token T_NEQ resolved as reduce (T_NEQ < T_NOT).
+    Conflict between rule 71 and token T_AND resolved as reduce (T_AND < T_NOT).
+    Conflict between rule 71 and token T_OR resolved as reduce (T_OR < T_NOT).
+
+
+state 160
+
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   47 statement: T_WHILE T_LPAREN expr T_RPAREN . block
+
+    T_LCB  shift, and go to state 81
+
+    block        go to state 190
+    begin_block  go to state 99
+
+
+state 161
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   57     | expr T_MINUS . expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 191
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 162
+
+   56 expr: . expr T_PLUS expr
+   56     | expr T_PLUS . expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 192
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 163
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   58     | expr T_MULT . expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 193
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 164
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   59     | expr T_DIV . expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 194
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 165
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   60     | expr T_LEFTSHIFT . expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 195
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 166
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   61     | expr T_RIGHTSHIFT . expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 196
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 167
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   67     | expr T_LT . expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 197
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 168
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   68     | expr T_GT . expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 198
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 169
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   62     | expr T_MOD . expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 199
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 170
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   65     | expr T_LEQ . expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 200
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 171
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   64     | expr T_GEQ . expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 201
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 172
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   63     | expr T_EQ . expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 202
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 173
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   66     | expr T_NEQ . expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 203
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 174
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   69     | expr T_AND . expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 204
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 175
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   70     | expr T_OR . expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 205
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 176
+
+   50 statement: T_FOR T_LPAREN assigns T_SEMICOLON . expr T_SEMICOLON assigns T_RPAREN block
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 206
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 177
+
+   53 assigns: assigns assign .
+
+    $default  reduce using rule 53 (assigns)
+
+
+state 178
+
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   48 statement: T_IF T_LPAREN expr T_RPAREN . block T_ELSE block
+   49          | T_IF T_LPAREN expr T_RPAREN . block
+
+    T_LCB  shift, and go to state 81
+
+    block        go to state 207
+    begin_block  go to state 99
+
+
+state 179
+
+   27 typedSymbol: T_VAR T_ID type T_SEMICOLON .
+
+    $default  reduce using rule 27 (typedSymbol)
+
+
+state 180
+
+   25 typedSymbols: T_VAR ids type T_SEMICOLON .
+
+    $default  reduce using rule 25 (typedSymbols)
+
+
+state 181
+
+   78 methodcall: T_ID T_LPAREN methodargs T_RPAREN .
+
+    $default  reduce using rule 78 (methodcall)
+
+
+state 182
+
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   81 methodargs: methodargs T_COMMA . methodarg
+   82 methodarg: . expr
+   83          | . T_STRINGCONSTANT
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN          shift, and go to state 129
+    T_ID              shift, and go to state 130
+    T_MINUS           shift, and go to state 131
+    T_NOT             shift, and go to state 132
+    T_STRINGCONSTANT  shift, and go to state 143
+    T_FALSE           shift, and go to state 73
+    T_TRUE            shift, and go to state 74
+    T_INTCONSTANT     shift, and go to state 75
+    T_CHARCONSTANT    shift, and go to state 76
+
+    expr          go to state 144
+    methodcall    go to state 134
+    methodarg     go to state 208
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 183
+
+   55 assign: T_ID T_LSB expr T_RSB . T_ASSIGN expr
+
+    T_ASSIGN  shift, and go to state 209
+
+
+state 184
+
+   41 statement: T_RETURN T_LPAREN T_RPAREN T_SEMICOLON .
+
+    $default  reduce using rule 41 (statement)
+
+
+state 185
+
+   42 statement: T_RETURN T_LPAREN expr T_RPAREN . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 210
+
+
+state 186
+
+   26 typedSymbols: typedSymbols T_VAR ids type . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 211
+
+
+state 187
+
+   33 block: begin_block typedSymbols statements end_block .
+
+    $default  reduce using rule 33 (block)
+
+
+state 188
+
+   74 expr: T_LPAREN expr T_RPAREN .
+
+    $default  reduce using rule 74 (expr)
+
+
+state 189
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+   75     | T_ID T_LSB expr . T_RSB
+
+    T_RSB         shift, and go to state 212
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+
+state 190
+
+   47 statement: T_WHILE T_LPAREN expr T_RPAREN block .
+
+    $default  reduce using rule 47 (statement)
+
+
+state 191
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   57     | expr T_MINUS expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 57 (expr)
+
+    Conflict between rule 57 and token T_MINUS resolved as reduce (%left T_MINUS).
+    Conflict between rule 57 and token T_PLUS resolved as reduce (%left T_PLUS).
+    Conflict between rule 57 and token T_MULT resolved as shift (T_MINUS < T_MULT).
+    Conflict between rule 57 and token T_DIV resolved as shift (T_MINUS < T_DIV).
+    Conflict between rule 57 and token T_LEFTSHIFT resolved as shift (T_MINUS < T_LEFTSHIFT).
+    Conflict between rule 57 and token T_RIGHTSHIFT resolved as shift (T_MINUS < T_RIGHTSHIFT).
+    Conflict between rule 57 and token T_LT resolved as reduce (T_LT < T_MINUS).
+    Conflict between rule 57 and token T_GT resolved as reduce (T_GT < T_MINUS).
+    Conflict between rule 57 and token T_MOD resolved as shift (T_MINUS < T_MOD).
+    Conflict between rule 57 and token T_LEQ resolved as reduce (T_LEQ < T_MINUS).
+    Conflict between rule 57 and token T_GEQ resolved as reduce (T_GEQ < T_MINUS).
+    Conflict between rule 57 and token T_EQ resolved as reduce (T_EQ < T_MINUS).
+    Conflict between rule 57 and token T_NEQ resolved as reduce (T_NEQ < T_MINUS).
+    Conflict between rule 57 and token T_AND resolved as reduce (T_AND < T_MINUS).
+    Conflict between rule 57 and token T_OR resolved as reduce (T_OR < T_MINUS).
+
+
+state 192
+
+   56 expr: expr . T_PLUS expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   56     | expr T_PLUS expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 56 (expr)
+
+    Conflict between rule 56 and token T_MINUS resolved as reduce (%left T_MINUS).
+    Conflict between rule 56 and token T_PLUS resolved as reduce (%left T_PLUS).
+    Conflict between rule 56 and token T_MULT resolved as shift (T_PLUS < T_MULT).
+    Conflict between rule 56 and token T_DIV resolved as shift (T_PLUS < T_DIV).
+    Conflict between rule 56 and token T_LEFTSHIFT resolved as shift (T_PLUS < T_LEFTSHIFT).
+    Conflict between rule 56 and token T_RIGHTSHIFT resolved as shift (T_PLUS < T_RIGHTSHIFT).
+    Conflict between rule 56 and token T_LT resolved as reduce (T_LT < T_PLUS).
+    Conflict between rule 56 and token T_GT resolved as reduce (T_GT < T_PLUS).
+    Conflict between rule 56 and token T_MOD resolved as shift (T_PLUS < T_MOD).
+    Conflict between rule 56 and token T_LEQ resolved as reduce (T_LEQ < T_PLUS).
+    Conflict between rule 56 and token T_GEQ resolved as reduce (T_GEQ < T_PLUS).
+    Conflict between rule 56 and token T_EQ resolved as reduce (T_EQ < T_PLUS).
+    Conflict between rule 56 and token T_NEQ resolved as reduce (T_NEQ < T_PLUS).
+    Conflict between rule 56 and token T_AND resolved as reduce (T_AND < T_PLUS).
+    Conflict between rule 56 and token T_OR resolved as reduce (T_OR < T_PLUS).
+
+
+state 193
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   58     | expr T_MULT expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    $default  reduce using rule 58 (expr)
+
+    Conflict between rule 58 and token T_MINUS resolved as reduce (T_MINUS < T_MULT).
+    Conflict between rule 58 and token T_PLUS resolved as reduce (T_PLUS < T_MULT).
+    Conflict between rule 58 and token T_MULT resolved as reduce (%left T_MULT).
+    Conflict between rule 58 and token T_DIV resolved as reduce (%left T_DIV).
+    Conflict between rule 58 and token T_LEFTSHIFT resolved as reduce (%left T_LEFTSHIFT).
+    Conflict between rule 58 and token T_RIGHTSHIFT resolved as reduce (%left T_RIGHTSHIFT).
+    Conflict between rule 58 and token T_LT resolved as reduce (T_LT < T_MULT).
+    Conflict between rule 58 and token T_GT resolved as reduce (T_GT < T_MULT).
+    Conflict between rule 58 and token T_MOD resolved as reduce (%left T_MOD).
+    Conflict between rule 58 and token T_LEQ resolved as reduce (T_LEQ < T_MULT).
+    Conflict between rule 58 and token T_GEQ resolved as reduce (T_GEQ < T_MULT).
+    Conflict between rule 58 and token T_EQ resolved as reduce (T_EQ < T_MULT).
+    Conflict between rule 58 and token T_NEQ resolved as reduce (T_NEQ < T_MULT).
+    Conflict between rule 58 and token T_AND resolved as reduce (T_AND < T_MULT).
+    Conflict between rule 58 and token T_OR resolved as reduce (T_OR < T_MULT).
+
+
+state 194
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   59     | expr T_DIV expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    $default  reduce using rule 59 (expr)
+
+    Conflict between rule 59 and token T_MINUS resolved as reduce (T_MINUS < T_DIV).
+    Conflict between rule 59 and token T_PLUS resolved as reduce (T_PLUS < T_DIV).
+    Conflict between rule 59 and token T_MULT resolved as reduce (%left T_MULT).
+    Conflict between rule 59 and token T_DIV resolved as reduce (%left T_DIV).
+    Conflict between rule 59 and token T_LEFTSHIFT resolved as reduce (%left T_LEFTSHIFT).
+    Conflict between rule 59 and token T_RIGHTSHIFT resolved as reduce (%left T_RIGHTSHIFT).
+    Conflict between rule 59 and token T_LT resolved as reduce (T_LT < T_DIV).
+    Conflict between rule 59 and token T_GT resolved as reduce (T_GT < T_DIV).
+    Conflict between rule 59 and token T_MOD resolved as reduce (%left T_MOD).
+    Conflict between rule 59 and token T_LEQ resolved as reduce (T_LEQ < T_DIV).
+    Conflict between rule 59 and token T_GEQ resolved as reduce (T_GEQ < T_DIV).
+    Conflict between rule 59 and token T_EQ resolved as reduce (T_EQ < T_DIV).
+    Conflict between rule 59 and token T_NEQ resolved as reduce (T_NEQ < T_DIV).
+    Conflict between rule 59 and token T_AND resolved as reduce (T_AND < T_DIV).
+    Conflict between rule 59 and token T_OR resolved as reduce (T_OR < T_DIV).
+
+
+state 195
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   60     | expr T_LEFTSHIFT expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    $default  reduce using rule 60 (expr)
+
+    Conflict between rule 60 and token T_MINUS resolved as reduce (T_MINUS < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_PLUS resolved as reduce (T_PLUS < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_MULT resolved as reduce (%left T_MULT).
+    Conflict between rule 60 and token T_DIV resolved as reduce (%left T_DIV).
+    Conflict between rule 60 and token T_LEFTSHIFT resolved as reduce (%left T_LEFTSHIFT).
+    Conflict between rule 60 and token T_RIGHTSHIFT resolved as reduce (%left T_RIGHTSHIFT).
+    Conflict between rule 60 and token T_LT resolved as reduce (T_LT < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_GT resolved as reduce (T_GT < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_MOD resolved as reduce (%left T_MOD).
+    Conflict between rule 60 and token T_LEQ resolved as reduce (T_LEQ < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_GEQ resolved as reduce (T_GEQ < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_EQ resolved as reduce (T_EQ < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_NEQ resolved as reduce (T_NEQ < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_AND resolved as reduce (T_AND < T_LEFTSHIFT).
+    Conflict between rule 60 and token T_OR resolved as reduce (T_OR < T_LEFTSHIFT).
+
+
+state 196
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   61     | expr T_RIGHTSHIFT expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    $default  reduce using rule 61 (expr)
+
+    Conflict between rule 61 and token T_MINUS resolved as reduce (T_MINUS < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_PLUS resolved as reduce (T_PLUS < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_MULT resolved as reduce (%left T_MULT).
+    Conflict between rule 61 and token T_DIV resolved as reduce (%left T_DIV).
+    Conflict between rule 61 and token T_LEFTSHIFT resolved as reduce (%left T_LEFTSHIFT).
+    Conflict between rule 61 and token T_RIGHTSHIFT resolved as reduce (%left T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_LT resolved as reduce (T_LT < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_GT resolved as reduce (T_GT < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_MOD resolved as reduce (%left T_MOD).
+    Conflict between rule 61 and token T_LEQ resolved as reduce (T_LEQ < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_GEQ resolved as reduce (T_GEQ < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_EQ resolved as reduce (T_EQ < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_NEQ resolved as reduce (T_NEQ < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_AND resolved as reduce (T_AND < T_RIGHTSHIFT).
+    Conflict between rule 61 and token T_OR resolved as reduce (T_OR < T_RIGHTSHIFT).
+
+
+state 197
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   67     | expr T_LT expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 67 (expr)
+
+    Conflict between rule 67 and token T_MINUS resolved as shift (T_LT < T_MINUS).
+    Conflict between rule 67 and token T_PLUS resolved as shift (T_LT < T_PLUS).
+    Conflict between rule 67 and token T_MULT resolved as shift (T_LT < T_MULT).
+    Conflict between rule 67 and token T_DIV resolved as shift (T_LT < T_DIV).
+    Conflict between rule 67 and token T_LEFTSHIFT resolved as shift (T_LT < T_LEFTSHIFT).
+    Conflict between rule 67 and token T_RIGHTSHIFT resolved as shift (T_LT < T_RIGHTSHIFT).
+    Conflict between rule 67 and token T_LT resolved as reduce (%left T_LT).
+    Conflict between rule 67 and token T_GT resolved as reduce (%left T_GT).
+    Conflict between rule 67 and token T_MOD resolved as shift (T_LT < T_MOD).
+    Conflict between rule 67 and token T_LEQ resolved as reduce (%left T_LEQ).
+    Conflict between rule 67 and token T_GEQ resolved as reduce (%left T_GEQ).
+    Conflict between rule 67 and token T_EQ resolved as reduce (%left T_EQ).
+    Conflict between rule 67 and token T_NEQ resolved as reduce (%left T_NEQ).
+    Conflict between rule 67 and token T_AND resolved as reduce (T_AND < T_LT).
+    Conflict between rule 67 and token T_OR resolved as reduce (T_OR < T_LT).
+
+
+state 198
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   68     | expr T_GT expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 68 (expr)
+
+    Conflict between rule 68 and token T_MINUS resolved as shift (T_GT < T_MINUS).
+    Conflict between rule 68 and token T_PLUS resolved as shift (T_GT < T_PLUS).
+    Conflict between rule 68 and token T_MULT resolved as shift (T_GT < T_MULT).
+    Conflict between rule 68 and token T_DIV resolved as shift (T_GT < T_DIV).
+    Conflict between rule 68 and token T_LEFTSHIFT resolved as shift (T_GT < T_LEFTSHIFT).
+    Conflict between rule 68 and token T_RIGHTSHIFT resolved as shift (T_GT < T_RIGHTSHIFT).
+    Conflict between rule 68 and token T_LT resolved as reduce (%left T_LT).
+    Conflict between rule 68 and token T_GT resolved as reduce (%left T_GT).
+    Conflict between rule 68 and token T_MOD resolved as shift (T_GT < T_MOD).
+    Conflict between rule 68 and token T_LEQ resolved as reduce (%left T_LEQ).
+    Conflict between rule 68 and token T_GEQ resolved as reduce (%left T_GEQ).
+    Conflict between rule 68 and token T_EQ resolved as reduce (%left T_EQ).
+    Conflict between rule 68 and token T_NEQ resolved as reduce (%left T_NEQ).
+    Conflict between rule 68 and token T_AND resolved as reduce (T_AND < T_GT).
+    Conflict between rule 68 and token T_OR resolved as reduce (T_OR < T_GT).
+
+
+state 199
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   62     | expr T_MOD expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_MINUS, T_PLUS, T_MULT, T_DIV, T_LEFTSHIFT, T_RIGHTSHIFT, T_LT, T_GT, T_MOD, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    $default  reduce using rule 62 (expr)
+
+    Conflict between rule 62 and token T_MINUS resolved as reduce (T_MINUS < T_MOD).
+    Conflict between rule 62 and token T_PLUS resolved as reduce (T_PLUS < T_MOD).
+    Conflict between rule 62 and token T_MULT resolved as reduce (%left T_MULT).
+    Conflict between rule 62 and token T_DIV resolved as reduce (%left T_DIV).
+    Conflict between rule 62 and token T_LEFTSHIFT resolved as reduce (%left T_LEFTSHIFT).
+    Conflict between rule 62 and token T_RIGHTSHIFT resolved as reduce (%left T_RIGHTSHIFT).
+    Conflict between rule 62 and token T_LT resolved as reduce (T_LT < T_MOD).
+    Conflict between rule 62 and token T_GT resolved as reduce (T_GT < T_MOD).
+    Conflict between rule 62 and token T_MOD resolved as reduce (%left T_MOD).
+    Conflict between rule 62 and token T_LEQ resolved as reduce (T_LEQ < T_MOD).
+    Conflict between rule 62 and token T_GEQ resolved as reduce (T_GEQ < T_MOD).
+    Conflict between rule 62 and token T_EQ resolved as reduce (T_EQ < T_MOD).
+    Conflict between rule 62 and token T_NEQ resolved as reduce (T_NEQ < T_MOD).
+    Conflict between rule 62 and token T_AND resolved as reduce (T_AND < T_MOD).
+    Conflict between rule 62 and token T_OR resolved as reduce (T_OR < T_MOD).
+
+
+state 200
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   65     | expr T_LEQ expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 65 (expr)
+
+    Conflict between rule 65 and token T_MINUS resolved as shift (T_LEQ < T_MINUS).
+    Conflict between rule 65 and token T_PLUS resolved as shift (T_LEQ < T_PLUS).
+    Conflict between rule 65 and token T_MULT resolved as shift (T_LEQ < T_MULT).
+    Conflict between rule 65 and token T_DIV resolved as shift (T_LEQ < T_DIV).
+    Conflict between rule 65 and token T_LEFTSHIFT resolved as shift (T_LEQ < T_LEFTSHIFT).
+    Conflict between rule 65 and token T_RIGHTSHIFT resolved as shift (T_LEQ < T_RIGHTSHIFT).
+    Conflict between rule 65 and token T_LT resolved as reduce (%left T_LT).
+    Conflict between rule 65 and token T_GT resolved as reduce (%left T_GT).
+    Conflict between rule 65 and token T_MOD resolved as shift (T_LEQ < T_MOD).
+    Conflict between rule 65 and token T_LEQ resolved as reduce (%left T_LEQ).
+    Conflict between rule 65 and token T_GEQ resolved as reduce (%left T_GEQ).
+    Conflict between rule 65 and token T_EQ resolved as reduce (%left T_EQ).
+    Conflict between rule 65 and token T_NEQ resolved as reduce (%left T_NEQ).
+    Conflict between rule 65 and token T_AND resolved as reduce (T_AND < T_LEQ).
+    Conflict between rule 65 and token T_OR resolved as reduce (T_OR < T_LEQ).
+
+
+state 201
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   64     | expr T_GEQ expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 64 (expr)
+
+    Conflict between rule 64 and token T_MINUS resolved as shift (T_GEQ < T_MINUS).
+    Conflict between rule 64 and token T_PLUS resolved as shift (T_GEQ < T_PLUS).
+    Conflict between rule 64 and token T_MULT resolved as shift (T_GEQ < T_MULT).
+    Conflict between rule 64 and token T_DIV resolved as shift (T_GEQ < T_DIV).
+    Conflict between rule 64 and token T_LEFTSHIFT resolved as shift (T_GEQ < T_LEFTSHIFT).
+    Conflict between rule 64 and token T_RIGHTSHIFT resolved as shift (T_GEQ < T_RIGHTSHIFT).
+    Conflict between rule 64 and token T_LT resolved as reduce (%left T_LT).
+    Conflict between rule 64 and token T_GT resolved as reduce (%left T_GT).
+    Conflict between rule 64 and token T_MOD resolved as shift (T_GEQ < T_MOD).
+    Conflict between rule 64 and token T_LEQ resolved as reduce (%left T_LEQ).
+    Conflict between rule 64 and token T_GEQ resolved as reduce (%left T_GEQ).
+    Conflict between rule 64 and token T_EQ resolved as reduce (%left T_EQ).
+    Conflict between rule 64 and token T_NEQ resolved as reduce (%left T_NEQ).
+    Conflict between rule 64 and token T_AND resolved as reduce (T_AND < T_GEQ).
+    Conflict between rule 64 and token T_OR resolved as reduce (T_OR < T_GEQ).
+
+
+state 202
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   63     | expr T_EQ expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 63 (expr)
+
+    Conflict between rule 63 and token T_MINUS resolved as shift (T_EQ < T_MINUS).
+    Conflict between rule 63 and token T_PLUS resolved as shift (T_EQ < T_PLUS).
+    Conflict between rule 63 and token T_MULT resolved as shift (T_EQ < T_MULT).
+    Conflict between rule 63 and token T_DIV resolved as shift (T_EQ < T_DIV).
+    Conflict between rule 63 and token T_LEFTSHIFT resolved as shift (T_EQ < T_LEFTSHIFT).
+    Conflict between rule 63 and token T_RIGHTSHIFT resolved as shift (T_EQ < T_RIGHTSHIFT).
+    Conflict between rule 63 and token T_LT resolved as reduce (%left T_LT).
+    Conflict between rule 63 and token T_GT resolved as reduce (%left T_GT).
+    Conflict between rule 63 and token T_MOD resolved as shift (T_EQ < T_MOD).
+    Conflict between rule 63 and token T_LEQ resolved as reduce (%left T_LEQ).
+    Conflict between rule 63 and token T_GEQ resolved as reduce (%left T_GEQ).
+    Conflict between rule 63 and token T_EQ resolved as reduce (%left T_EQ).
+    Conflict between rule 63 and token T_NEQ resolved as reduce (%left T_NEQ).
+    Conflict between rule 63 and token T_AND resolved as reduce (T_AND < T_EQ).
+    Conflict between rule 63 and token T_OR resolved as reduce (T_OR < T_EQ).
+
+
+state 203
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   66     | expr T_NEQ expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_LT, T_GT, T_LEQ, T_GEQ, T_EQ, T_NEQ, T_AND, T_OR]
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_MOD         shift, and go to state 169
+
+    $default  reduce using rule 66 (expr)
+
+    Conflict between rule 66 and token T_MINUS resolved as shift (T_NEQ < T_MINUS).
+    Conflict between rule 66 and token T_PLUS resolved as shift (T_NEQ < T_PLUS).
+    Conflict between rule 66 and token T_MULT resolved as shift (T_NEQ < T_MULT).
+    Conflict between rule 66 and token T_DIV resolved as shift (T_NEQ < T_DIV).
+    Conflict between rule 66 and token T_LEFTSHIFT resolved as shift (T_NEQ < T_LEFTSHIFT).
+    Conflict between rule 66 and token T_RIGHTSHIFT resolved as shift (T_NEQ < T_RIGHTSHIFT).
+    Conflict between rule 66 and token T_LT resolved as reduce (%left T_LT).
+    Conflict between rule 66 and token T_GT resolved as reduce (%left T_GT).
+    Conflict between rule 66 and token T_MOD resolved as shift (T_NEQ < T_MOD).
+    Conflict between rule 66 and token T_LEQ resolved as reduce (%left T_LEQ).
+    Conflict between rule 66 and token T_GEQ resolved as reduce (%left T_GEQ).
+    Conflict between rule 66 and token T_EQ resolved as reduce (%left T_EQ).
+    Conflict between rule 66 and token T_NEQ resolved as reduce (%left T_NEQ).
+    Conflict between rule 66 and token T_AND resolved as reduce (T_AND < T_NEQ).
+    Conflict between rule 66 and token T_OR resolved as reduce (T_OR < T_NEQ).
+
+
+state 204
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_AND, T_OR]
+   69     | expr T_AND expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_AND, T_OR]
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+
+    $default  reduce using rule 69 (expr)
+
+    Conflict between rule 69 and token T_MINUS resolved as shift (T_AND < T_MINUS).
+    Conflict between rule 69 and token T_PLUS resolved as shift (T_AND < T_PLUS).
+    Conflict between rule 69 and token T_MULT resolved as shift (T_AND < T_MULT).
+    Conflict between rule 69 and token T_DIV resolved as shift (T_AND < T_DIV).
+    Conflict between rule 69 and token T_LEFTSHIFT resolved as shift (T_AND < T_LEFTSHIFT).
+    Conflict between rule 69 and token T_RIGHTSHIFT resolved as shift (T_AND < T_RIGHTSHIFT).
+    Conflict between rule 69 and token T_LT resolved as shift (T_AND < T_LT).
+    Conflict between rule 69 and token T_GT resolved as shift (T_AND < T_GT).
+    Conflict between rule 69 and token T_MOD resolved as shift (T_AND < T_MOD).
+    Conflict between rule 69 and token T_LEQ resolved as shift (T_AND < T_LEQ).
+    Conflict between rule 69 and token T_GEQ resolved as shift (T_AND < T_GEQ).
+    Conflict between rule 69 and token T_EQ resolved as shift (T_AND < T_EQ).
+    Conflict between rule 69 and token T_NEQ resolved as shift (T_AND < T_NEQ).
+    Conflict between rule 69 and token T_AND resolved as reduce (%left T_AND).
+    Conflict between rule 69 and token T_OR resolved as reduce (T_OR < T_AND).
+
+
+state 205
+
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_OR]
+   70     | expr T_OR expr .  [T_RPAREN, T_SEMICOLON, T_COMMA, T_RSB, T_ID, T_OR]
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+
+    $default  reduce using rule 70 (expr)
+
+    Conflict between rule 70 and token T_MINUS resolved as shift (T_OR < T_MINUS).
+    Conflict between rule 70 and token T_PLUS resolved as shift (T_OR < T_PLUS).
+    Conflict between rule 70 and token T_MULT resolved as shift (T_OR < T_MULT).
+    Conflict between rule 70 and token T_DIV resolved as shift (T_OR < T_DIV).
+    Conflict between rule 70 and token T_LEFTSHIFT resolved as shift (T_OR < T_LEFTSHIFT).
+    Conflict between rule 70 and token T_RIGHTSHIFT resolved as shift (T_OR < T_RIGHTSHIFT).
+    Conflict between rule 70 and token T_LT resolved as shift (T_OR < T_LT).
+    Conflict between rule 70 and token T_GT resolved as shift (T_OR < T_GT).
+    Conflict between rule 70 and token T_MOD resolved as shift (T_OR < T_MOD).
+    Conflict between rule 70 and token T_LEQ resolved as shift (T_OR < T_LEQ).
+    Conflict between rule 70 and token T_GEQ resolved as shift (T_OR < T_GEQ).
+    Conflict between rule 70 and token T_EQ resolved as shift (T_OR < T_EQ).
+    Conflict between rule 70 and token T_NEQ resolved as shift (T_OR < T_NEQ).
+    Conflict between rule 70 and token T_AND resolved as shift (T_OR < T_AND).
+    Conflict between rule 70 and token T_OR resolved as reduce (%left T_OR).
+
+
+state 206
+
+   50 statement: T_FOR T_LPAREN assigns T_SEMICOLON expr . T_SEMICOLON assigns T_RPAREN block
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_SEMICOLON   shift, and go to state 213
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+
+state 207
+
+   48 statement: T_IF T_LPAREN expr T_RPAREN block . T_ELSE block
+   49          | T_IF T_LPAREN expr T_RPAREN block .  [T_WHILE, T_FOR, T_IF, T_LCB, T_RCB, T_ID, T_BREAK, T_CONTINUE, T_RETURN]
+
+    T_ELSE  shift, and go to state 214
+
+    $default  reduce using rule 49 (statement)
+
+
+state 208
+
+   81 methodargs: methodargs T_COMMA methodarg .
+
+    $default  reduce using rule 81 (methodargs)
+
+
+state 209
+
+   55 assign: T_ID T_LSB expr T_RSB T_ASSIGN . expr
+   56 expr: . expr T_PLUS expr
+   57     | . expr T_MINUS expr
+   58     | . expr T_MULT expr
+   59     | . expr T_DIV expr
+   60     | . expr T_LEFTSHIFT expr
+   61     | . expr T_RIGHTSHIFT expr
+   62     | . expr T_MOD expr
+   63     | . expr T_EQ expr
+   64     | . expr T_GEQ expr
+   65     | . expr T_LEQ expr
+   66     | . expr T_NEQ expr
+   67     | . expr T_LT expr
+   68     | . expr T_GT expr
+   69     | . expr T_AND expr
+   70     | . expr T_OR expr
+   71     | . T_NOT expr
+   72     | . T_MINUS expr
+   73     | . constant
+   74     | . T_LPAREN expr T_RPAREN
+   75     | . T_ID T_LSB expr T_RSB
+   76     | . methodcall
+   77     | . T_ID
+   78 methodcall: . T_ID T_LPAREN methodargs T_RPAREN
+   79           | . T_ID T_LPAREN T_RPAREN
+   98 constant: . T_INTCONSTANT
+   99         | . T_CHARCONSTANT
+  100         | . boolConstant
+  101 boolConstant: . T_TRUE
+  102             | . T_FALSE
+
+    T_LPAREN        shift, and go to state 129
+    T_ID            shift, and go to state 130
+    T_MINUS         shift, and go to state 131
+    T_NOT           shift, and go to state 132
+    T_FALSE         shift, and go to state 73
+    T_TRUE          shift, and go to state 74
+    T_INTCONSTANT   shift, and go to state 75
+    T_CHARCONSTANT  shift, and go to state 76
+
+    expr          go to state 215
+    methodcall    go to state 134
+    constant      go to state 135
+    boolConstant  go to state 78
+
+
+state 210
+
+   42 statement: T_RETURN T_LPAREN expr T_RPAREN T_SEMICOLON .
+
+    $default  reduce using rule 42 (statement)
+
+
+state 211
+
+   26 typedSymbols: typedSymbols T_VAR ids type T_SEMICOLON .
+
+    $default  reduce using rule 26 (typedSymbols)
+
+
+state 212
+
+   75 expr: T_ID T_LSB expr T_RSB .
+
+    $default  reduce using rule 75 (expr)
+
+
+state 213
+
+   50 statement: T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON . assigns T_RPAREN block
+   52 assigns: . assign
+   53        | . assigns assign
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+
+    T_ID  shift, and go to state 136
+
+    assigns  go to state 216
+    assign   go to state 138
+
+
+state 214
+
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   48 statement: T_IF T_LPAREN expr T_RPAREN block T_ELSE . block
+
+    T_LCB  shift, and go to state 81
+
+    block        go to state 217
+    begin_block  go to state 99
+
+
+state 215
+
+   55 assign: T_ID T_LSB expr T_RSB T_ASSIGN expr .  [T_RPAREN, T_SEMICOLON, T_ID]
+   56 expr: expr . T_PLUS expr
+   57     | expr . T_MINUS expr
+   58     | expr . T_MULT expr
+   59     | expr . T_DIV expr
+   60     | expr . T_LEFTSHIFT expr
+   61     | expr . T_RIGHTSHIFT expr
+   62     | expr . T_MOD expr
+   63     | expr . T_EQ expr
+   64     | expr . T_GEQ expr
+   65     | expr . T_LEQ expr
+   66     | expr . T_NEQ expr
+   67     | expr . T_LT expr
+   68     | expr . T_GT expr
+   69     | expr . T_AND expr
+   70     | expr . T_OR expr
+
+    T_MINUS       shift, and go to state 161
+    T_PLUS        shift, and go to state 162
+    T_MULT        shift, and go to state 163
+    T_DIV         shift, and go to state 164
+    T_LEFTSHIFT   shift, and go to state 165
+    T_RIGHTSHIFT  shift, and go to state 166
+    T_LT          shift, and go to state 167
+    T_GT          shift, and go to state 168
+    T_MOD         shift, and go to state 169
+    T_LEQ         shift, and go to state 170
+    T_GEQ         shift, and go to state 171
+    T_EQ          shift, and go to state 172
+    T_NEQ         shift, and go to state 173
+    T_AND         shift, and go to state 174
+    T_OR          shift, and go to state 175
+
+    $default  reduce using rule 55 (assign)
+
+
+state 216
+
+   50 statement: T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns . T_RPAREN block
+   53 assigns: assigns . assign
+   54 assign: . T_ID T_ASSIGN expr
+   55       | . T_ID T_LSB expr T_RSB T_ASSIGN expr
+
+    T_RPAREN  shift, and go to state 218
+    T_ID      shift, and go to state 136
+
+    assign  go to state 177
+
+
+state 217
+
+   48 statement: T_IF T_LPAREN expr T_RPAREN block T_ELSE block .
+
+    $default  reduce using rule 48 (statement)
+
+
+state 218
+
+   32 block: . begin_block end_block
+   33      | . begin_block typedSymbols statements end_block
+   34      | . begin_block typedSymbols end_block
+   35      | . begin_block statements end_block
+   36 begin_block: . T_LCB
+   50 statement: T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN . block
+
+    T_LCB  shift, and go to state 81
+
+    block        go to state 219
+    begin_block  go to state 99
+
+
+state 219
+
+   50 statement: T_FOR T_LPAREN assigns T_SEMICOLON expr T_SEMICOLON assigns T_RPAREN block .
+
+    $default  reduce using rule 50 (statement)
